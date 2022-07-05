@@ -7,8 +7,10 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-router.route("/").post(createUser).get(getUsers);
+const {addUserValidator, updateUserValidator, getUserValidator, deleteUserValidator} = require('../utils/validator/userValidator')
 
-router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
+router.route("/").post(addUserValidator, createUser).get(getUsers);
+
+router.route("/:id").get(getUserValidator, getUser).put(updateUserValidator, updateUser).delete(deleteUserValidator, deleteUser);
 
 module.exports = router;
