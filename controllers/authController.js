@@ -38,9 +38,9 @@ exports.auth = asyncHandler(async (req, res, next) => {
       new ApiError("The user that belong to this token no longer exist")
     );
   }
-  if (currentUser.passwordChangedAt) {
+  if (user.passwordChangedAt) {
     const passwordToTimeStamps = parseInt(
-      currentUser.passwordChangedAt / 1000,
+      user.passwordChangedAt / 1000,
       10
     );
     if (passwordToTimeStamps > decoded.iat) {
