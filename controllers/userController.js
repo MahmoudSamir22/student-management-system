@@ -8,6 +8,7 @@ const User = require("../models/userModel");
 //@access Public
 exports.createUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
+  await user.save()
   res.status(201).json({ status: "Success", data: user });
 });
 
@@ -55,5 +56,6 @@ exports.updateUser =  asyncHandler(async (req, res ,next) => {
   if(!user){
     return next(new ApiError(`There is no user with this id ${req.params.id}`, 404));
   }
+  await user.save()
   res.status(200).json({data: user})
 })
