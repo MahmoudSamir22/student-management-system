@@ -35,6 +35,7 @@ exports.addUserValidator = [
 ];
 
 exports.updateUserValidator = [
+  check("id").isMongoId().withMessage("This id is not valid"),
   body("email")
     .optional()
     .custom((val) => {
