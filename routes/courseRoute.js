@@ -14,6 +14,10 @@ router
   .post(auth, allowedTo("instructor"), addCourse)
   .get(getCourses);
 
-router.route("/:id").get(getCourse).put(updateCourse).delete(deleteCourse);
+router
+  .route("/:id")
+  .get(getCourse)
+  .put(auth, allowedTo("instructor", "admin"), updateCourse)
+  .delete(auth, allowedTo("instructor", "admin"), deleteCourse);
 
 module.exports = router;

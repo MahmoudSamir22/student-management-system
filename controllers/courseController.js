@@ -48,6 +48,11 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
       new ApiError(`Can't find course with this id: ${req.params.id}`)
     );
   }
+  if(req.user.role === 'instructor') {
+    if(req.user._id !== course.instructor){
+      return next(new ApiError(`You can't update this course. It's not yours`))
+    }
+  }
   res.status(200).json({ status: "Success", data: course });
 });
 
@@ -60,6 +65,11 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
     return next(
       new ApiError(`Can't find course with this id: ${req.params.id}`)
     );
+  }
+  if(req.user.role === 'instructor') {
+    if(req.user._id !== course.instructor){
+      return next(new ApiError(`You can't Delete this course. It's not yours`))
+    }
   }
   res.status(204).json();
 });
