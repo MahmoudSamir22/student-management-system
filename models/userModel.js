@@ -17,13 +17,15 @@ const userSchema = new mongoose.Schema(
     avatar: String,
     phone: String,
     passwordChangedAt: Date,
+    studentLevel: Number,
+    section: Number,
   },
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = bcrypt.hash(this.password, 12);
   next();
 });
 

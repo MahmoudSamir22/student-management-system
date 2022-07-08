@@ -12,21 +12,27 @@ const scheduleSchema = new mongoose.Schema(
     },
     course: {
       type: mongoose.Schema.ObjectId,
-      ref: "course",
+      ref: "Course",
     },
     duration: {
       type: Number,
       required: [true, "Duration is required"],
     },
     day: {
-      type: Date,
+      type: String,
       required: [true, "Day is required"],
+      enum: ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"],
     },
-    start: Date,
-    end: Date,
+    start: Number,
+    end: Number,
   },
   { timestamps: true }
 );
+
+scheduleSchema.pre(/^find/, function (next) {
+  this.populate({ path: "course", select: "name instructor -_id" });
+  next();
+});
 
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 

@@ -39,10 +39,7 @@ exports.auth = asyncHandler(async (req, res, next) => {
     );
   }
   if (user.passwordChangedAt) {
-    const passwordToTimeStamps = parseInt(
-      user.passwordChangedAt / 1000,
-      10
-    );
+    const passwordToTimeStamps = parseInt(user.passwordChangedAt / 1000, 10);
     if (passwordToTimeStamps > decoded.iat) {
       return next(
         new ApiError("User recentlly changed password please login again")
@@ -65,3 +62,14 @@ exports.allowedTo = (...roles) =>
     }
     next();
   });
+
+// @desc Get Logged user data
+// @route Middleware
+// @access Public
+exports.getLoggedUserData = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    return next(new ApiError("User not found", 404));
+  }
+  res.status(200).json({ status: "Success", data: user });
+});

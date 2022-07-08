@@ -8,7 +8,7 @@ const User = require("../models/userModel");
 //@access Public
 exports.createUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
-  await user.save()
+  await user.save();
   res.status(201).json({ status: "Success", data: user });
 });
 
@@ -26,36 +26,38 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 //@route GET /api/v1/users/:id
 //@access Public
 exports.getUser = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id);
-    if(!user){
-        return next(new ApiError('User not found', 404))
-    }
-    res
-      .status(200)
-      .json({ status: "Success", data: user });
-  });
-
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ApiError("User not found", 404));
+  }
+  res.status(200).json({ status: "Success", data: user });
+});
 
 //@desc Delete spesific user
 //@route DELETE /api/v1/users/:id
 //@access Public
-exports.deleteUser = asyncHandler(async (req, res ,next) => {
-  const user = await User.findByIdAndDelete(req.params.id)
-  if(!user){
-    return next(new ApiError(`There is no user with this id ${req.params.id}`, 404));
+exports.deleteUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with this id ${req.params.id}`, 404)
+    );
   }
-  res.status(204).json()
-})
-
+  res.status(204).json();
+});
 
 //@desc Update spesific user
 //@route PUT /api/v1/users/:id
 //@access Public
-exports.updateUser =  asyncHandler(async (req, res ,next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
-  if(!user){
-    return next(new ApiError(`There is no user with this id ${req.params.id}`, 404));
+exports.updateUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with this id ${req.params.id}`, 404)
+    );
   }
-  await user.save()
-  res.status(200).json({data: user})
-})
+  await user.save();
+  res.status(200).json({ data: user });
+});
