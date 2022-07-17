@@ -30,7 +30,7 @@ const scheduleSchema = new mongoose.Schema(
 );
 
 scheduleSchema.pre(/^find/, function (next) {
-  this.populate({ path: "course", select: "name instructor -_id" });
+  this.populate({ path: "course", select: "name instructor _id" });
   next();
 });
 
