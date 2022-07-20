@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "student", "instructor"],
       default: "student",
     },
+    courses: [{ type: mongoose.Schema.ObjectId, ref: "Course" }],
     avatar: String,
     phone: String,
     passwordChangedAt: Date,
@@ -22,6 +23,11 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({ path: "courses", select: "name instructor" });
+  next()
+});
 
 userSchema.pre("save", function (next) {
   if (!this.isModified("password")) return next();

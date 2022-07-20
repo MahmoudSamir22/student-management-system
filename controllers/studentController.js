@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiErrors");
 const Schedule = require("../models/scheduleModel");
 const Course = require('../models/courseModel')
+const User = require('../models/userModel')
 
 exports.getMySchedule = asyncHandler(async (req, res, next) => {
   const schedule = await Schedule.find({
@@ -15,8 +16,14 @@ exports.getMySchedule = asyncHandler(async (req, res, next) => {
   res.status(200).json({status: 'Success', data: schedule})
 });
 
-exports.getMyCourses = asyncHandler((req, res, next) => {
-  const courses = await Course.find({
-    
-  })
+exports.getMyCourses = asyncHandler(async (req, res, next) => {
+  if(!req.user.courses){
+    return next(new ApiError('Course not found', 404))
+  }
+  res.status(200).json({status: 'Success', data: req.user.courses})
+})
+
+exports.addCourseToMyList = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.user._id, {$push: {courses: req.body.course}}, {new: true})
+  res.status(200).json({status: 'Success', data: user})
 })

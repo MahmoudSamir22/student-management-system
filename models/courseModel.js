@@ -15,7 +15,7 @@ const courseSchema = new mongoose.Schema(
     content: String,
     instructor: {
       type: mongoose.Schema.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   },
   { timestamps: true }
