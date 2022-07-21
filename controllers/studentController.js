@@ -18,7 +18,7 @@ exports.getMySchedule = asyncHandler(async (req, res, next) => {
 
 exports.getMyCourses = asyncHandler(async (req, res, next) => {
   if(!req.user.courses){
-    return next(new ApiError('Course not found', 404))
+    return next(new ApiError('This user does not have any courses yet', 404))
   }
   res.status(200).json({status: 'Success', data: req.user.courses})
 })
