@@ -7,8 +7,7 @@ const Course = require("../models/courseModel");
 // @route POST /api/v1/courses
 // @access Private/Instructor
 exports.addCourse = asyncHandler(async (req, res, next) => {
-  let courseClone = { ...req.body, instructor: req.user._id };
-  const course = await Course.create(courseClone);
+  const course = await Course.create(req.body);
   await course.save();
   res.status(201).json({ status: "Success", data: course });
 });
@@ -40,19 +39,20 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 // @route PUT /api/v1/courses/id
 // @access Private/Instructor
 exports.updateCourse = asyncHandler(async (req, res, next) => {
-  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  let course = await Course.findById(req.params.id);
   if (!course) {
     return next(
       new ApiError(`Can't find course with this id: ${req.params.id}`)
     );
   }
-  if(req.user.role === 'instructor') {
-    if(req.user._id !== course.instructor){
-      return next(new ApiError(`You can't update this course. It's not yours`))
+  if (req.user.role === "instructor") {
+    if (req.user._id !== course.instructor) {
+      return next(new ApiError(`You can't update this course. It's not yours`));
     }
   }
+  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
   res.status(200).json({ status: "Success", data: course });
 });
 
@@ -60,16 +60,11 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
 // @route DELETE /api/v1/courses/id
 // @access Private/Instructor
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
-  const course = await Course.findByIdAndDelete(req.params.id);
+  let course = await Course.findByIdAndDelete(req.params.id);
   if (!course) {
     return next(
       new ApiError(`Can't find course with this id: ${req.params.id}`)
     );
-  }
-  if(req.user.role === 'instructor') {
-    if(req.user._id !== course.instructor){
-      return next(new ApiError(`You can't Delete this course. It's not yours`))
-    }
   }
   res.status(204).json();
 });

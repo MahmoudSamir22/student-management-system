@@ -11,13 +11,13 @@ const { auth, allowedTo } = require("../controllers/authController");
 
 router
   .route("/")
-  .post(auth, allowedTo("instructor"), addCourse)
+  .post(auth, allowedTo("admin"), addCourse)
   .get(getCourses);
 
 router
   .route("/:id")
   .get(getCourse)
   .put(auth, allowedTo("instructor", "admin"), updateCourse)
-  .delete(auth, allowedTo("instructor", "admin"), deleteCourse);
+  .delete(auth, allowedTo("admin"), deleteCourse);
 
 module.exports = router;
