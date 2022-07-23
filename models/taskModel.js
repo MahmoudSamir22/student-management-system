@@ -4,6 +4,7 @@ const taskSchema = new mongoose.Schema(
   {
     title: String,
     content: String,
+    description: String,
     points: Number,
     instructor: {
       type: mongoose.Schema.ObjectId,
