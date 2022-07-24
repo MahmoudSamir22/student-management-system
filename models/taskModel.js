@@ -20,6 +20,13 @@ const taskSchema = new mongoose.Schema(
 
 // create virtuals to access the answers from users
 
+// populate course and instructor information
+taskSchema.pre(/^find/, function(next){
+  this.populate({path: "course", select: 'name'})
+  this.populate({path: "instructor", select: 'name -courses'})
+  next()
+})
+
 const Task = mongoose.model("Task", taskSchema);
 
 module.exports = Task;

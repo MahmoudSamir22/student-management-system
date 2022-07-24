@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 
 const ApiError = require("../utils/apiErrors");
 const Schedule = require("../models/scheduleModel");
-const Course = require("../models/courseModel");
+const Task = require("../models/taskModel");
 const User = require("../models/userModel");
 
 // @desc Get student schedule
@@ -58,4 +58,17 @@ exports.removeCourseFromStudent = asyncHandler(async (req, res, next) => {
     { new: true }
   );
   res.status(200).json({ status: "Success", data: user });
+});
+
+// @desc Get student tasks
+// @route /api/v1/student/MyCourses
+// @access Private/Student
+exports.getMyTasks = asyncHandler(async (req, res, next) => {
+  const tasks = await Task.find({
+    course: { $in: req.user.courses },
+  });
+  if (!tasks) {
+    return next(new ApiError("Schedule not up yet", 404));
+  }
+  res.status(200).json({ status: "Success", data: tasks });
 });

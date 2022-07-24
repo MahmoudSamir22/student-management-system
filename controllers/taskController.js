@@ -7,6 +7,7 @@ const Task = require("../models/taskModel");
 // @route POST /api/v1/tasks
 // @access Private/Instructor
 exports.addTask = asyncHandler(async (req, res, next) => {
+  req.body.instructor = req.user._id;
   const task = await Task.create(req.body);
   await task.save();
   res.status(201).json({ status: "Success", data: task });
@@ -28,9 +29,7 @@ exports.getTasks = asyncHandler(async (req, res, next) => {
 exports.getTask = asyncHandler(async (req, res, next) => {
   const task = await Task.findById(req.params.id);
   if (!task) {
-    return next(
-      new ApiError(`Can't find task with this id: ${req.params.id}`)
-    );
+    return next(new ApiError(`Can't find task with this id: ${req.params.id}`));
   }
   res.status(200).json({ status: "Success", data: task });
 });
@@ -41,12 +40,10 @@ exports.getTask = asyncHandler(async (req, res, next) => {
 exports.updateTask = asyncHandler(async (req, res, next) => {
   let task = await Task.findById(req.params.id);
   if (!task) {
-    return next(
-      new ApiError(`Can't find task with this id: ${req.params.id}`)
-    );
+    return next(new ApiError(`Can't find task with this id: ${req.params.id}`));
   }
   if (req.user.role === "instructor") {
-    if (req.user._id !== task.instructor) {
+    if (req.user._id.toString() !== task.instructor.toString()) {
       return next(new ApiError(`You can't update this task. It's not yours`));
     }
   }
@@ -62,9 +59,7 @@ exports.updateTask = asyncHandler(async (req, res, next) => {
 exports.deleteTask = asyncHandler(async (req, res, next) => {
   let task = await Task.findByIdAndDelete(req.params.id);
   if (!task) {
-    return next(
-      new ApiError(`Can't find task with this id: ${req.params.id}`)
-    );
+    return next(new ApiError(`Can't find task with this id: ${req.params.id}`));
   }
   res.status(204).json();
 });
