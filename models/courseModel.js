@@ -13,6 +13,7 @@ const courseSchema = new mongoose.Schema(
     duration: Number,
     assignments: String,
     content: String,
+    fullMarks: Number,
     instructor: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
