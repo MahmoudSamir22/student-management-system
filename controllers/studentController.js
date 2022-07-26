@@ -4,6 +4,7 @@ const ApiError = require("../utils/apiErrors");
 const Schedule = require("../models/scheduleModel");
 const Task = require("../models/taskModel");
 const User = require("../models/userModel");
+const Grades = require('../models/gradesModel')
 
 // @desc Get student schedule
 // @route /api/v1/student/MySchedule
@@ -71,4 +72,17 @@ exports.getMyTasks = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Schedule not up yet", 404));
   }
   res.status(200).json({ status: "Success", data: tasks });
+});
+
+// @desc Get student Grades
+// @route /api/v1/student/MyGrades
+// @access Private/Student
+exports.getMyGrades = asyncHandler(async (req, res, next) => {
+  const grades = await Grades.find({
+    student: req.user._id,
+  });
+  if (!grades) {
+    return next(new ApiError("Grades not up yet", 404));
+  }
+  res.status(200).json({ status: "Success", data: grades });
 });

@@ -9,8 +9,8 @@ const studentRouter = require("./studentRoute");
 const mountRoutes = (app) => {
   app.use("/api/v1/users", userRouter);
   app.use("/api/v1/auth", authRouter);
-  app.use("/api/v1/courses", gradesRouter);
-  app.use("/api/v1/grades", courseRouter);
+  app.use("/api/v1/courses", courseRouter);
+  app.use("/api/v1/grades", gradesRouter);
   app.use("/api/v1/tasks", taskRouter);
   app.use("/api/v1/schedules", scheduleRouter);
   app.use("/api/v1/students", studentRouter);
