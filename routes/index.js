@@ -5,6 +5,7 @@ const gradesRouter = require("./gradesRoute");
 const taskRouter = require("./taskRoute");
 const scheduleRouter = require("./scheduleRoute");
 const studentRouter = require("./studentRoute");
+const instructorRouter = require("./instructorRoute");
 
 const mountRoutes = (app) => {
   app.use("/api/v1/users", userRouter);
@@ -14,6 +15,7 @@ const mountRoutes = (app) => {
   app.use("/api/v1/tasks", taskRouter);
   app.use("/api/v1/schedules", scheduleRouter);
   app.use("/api/v1/students", studentRouter);
+  app.use("/api/v1/instructor", instructorRouter);
 };
 
 module.exports = mountRoutes;
