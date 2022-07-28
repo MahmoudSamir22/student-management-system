@@ -1,7 +1,11 @@
 const asyncHandler = require("express-async-handler");
 
+const {uploadSinglePDF} = require('../middlewares/uploadFilesMiddleWare')
 const ApiError = require("../utils/apiErrors");
 const Course = require("../models/courseModel");
+
+
+exports.uploadCourseContent = uploadSinglePDF('content', 'courses')
 
 // @desc Add New Course
 // @route POST /api/v1/courses

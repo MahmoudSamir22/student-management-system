@@ -20,6 +20,7 @@ app.options('*', cors())
 
 app.use(express.json({limit: '20kb'}))
 
+app.use(express.static('uploads'))
 
 mountRoutes(app)
 app.all("*", (req, res, next) => {

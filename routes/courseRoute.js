@@ -6,12 +6,13 @@ const {
   getCourse,
   updateCourse,
   deleteCourse,
+  uploadCourseContent
 } = require("../controllers/courseController");
 const { auth, allowedTo } = require("../controllers/authController");
 
 router
   .route("/")
-  .post(auth, allowedTo("admin"), addCourse)
+  .post(auth, allowedTo("admin"), uploadCourseContent, addCourse)
   .get(getCourses);
 
 router
