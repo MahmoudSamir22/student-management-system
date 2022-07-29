@@ -6,12 +6,13 @@ const {
   getTask,
   updateTask,
   deleteTask,
+  uploadTaskContent
 } = require("../controllers/taskController");
 const { auth, allowedTo } = require("../controllers/authController");
 
 router
   .route("/")
-  .post(auth, allowedTo("instructor"), addTask)
+  .post(auth, allowedTo("instructor"), uploadTaskContent, addTask)
   .get(getTasks);
 
 router

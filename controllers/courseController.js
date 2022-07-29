@@ -4,7 +4,9 @@ const {uploadSinglePDF} = require('../middlewares/uploadFilesMiddleWare')
 const ApiError = require("../utils/apiErrors");
 const Course = require("../models/courseModel");
 
-
+// @desc Middleware to handle file uploads
+// @route Middleware
+// @access Private/Instructor
 exports.uploadCourseContent = uploadSinglePDF('content', 'courses')
 
 // @desc Add New Course

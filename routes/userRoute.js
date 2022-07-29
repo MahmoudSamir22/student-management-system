@@ -5,6 +5,8 @@ const {
   getUsers,
   updateUser,
   deleteUser,
+  uploadUserAvatar,
+  resizeUserAvatar,
 } = require("../controllers/userController");
 
 // const {
@@ -14,12 +16,11 @@ const {
 //   deleteUserValidator,
 // } = require("../utils/validator/userValidator");
 
-router.route("/").post( createUser).get(getUsers);
-
 router
-  .route("/:id")
-  .get(getUser)
-  .put(updateUser)
-  .delete(deleteUser);
+  .route("/")
+  .post(uploadUserAvatar, resizeUserAvatar, createUser)
+  .get(getUsers);
+
+router.route("/:id").get(getUser).put(updateUser).delete(deleteUser);
 
 module.exports = router;

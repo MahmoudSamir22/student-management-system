@@ -3,7 +3,9 @@ const fs = require("fs");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 
-const multerOption = (fileDest) => {
+const ApiError = require('../utils/apiErrors')
+
+const multerOptionPDF = (fileDest) => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       const path = `./uploads/${fileDest}`;
@@ -27,5 +29,21 @@ const multerOption = (fileDest) => {
   return upload;
 };
 
+const multerOptionImage = (fileDest) => {
+  const multerStorage = multer.memoryStorage();
+
+  const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb(new ApiError("Images only supported", 400), false);
+    }
+  };
+  const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+  return upload;
+};
+
 exports.uploadSinglePDF = (fileName, fileDest) =>
-  multerOption(fileDest).single(fileName);
+  multerOptionPDF(fileDest).single(fileName);
+
+exports.uploadSingleImage = (fileName) => multerOptionImage().single(fileName);

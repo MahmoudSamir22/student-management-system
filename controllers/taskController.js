@@ -4,8 +4,10 @@ const {uploadSinglePDF} = require('../middlewares/uploadFilesMiddleWare')
 const ApiError = require("../utils/apiErrors");
 const Task = require("../models/taskModel");
 
-
-exports.uploadCourseContent = uploadSinglePDF('content', 'tasks')
+// @desc Middleware to handle file uploads
+// @route Middleware
+// @access Private/Instructor
+exports.uploadTaskContent = uploadSinglePDF('content', 'tasks')
 
 
 // @desc Add New Task
