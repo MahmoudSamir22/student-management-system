@@ -1,5 +1,3 @@
-const asyncHandler = require("express-async-handler");
-
 const factory = require("./factoryHandler");
 const Grades = require("../models/gradesModel");
 

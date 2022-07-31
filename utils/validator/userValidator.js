@@ -47,14 +47,14 @@ exports.updateUserValidator = [
     .isMobilePhone("ar-EG")
     .optional()
     .withMessage("Please enter a valid egyptian phone number"),
-  validatorMiddleware(),
+  validatorMiddleware,
 ];
 
 exports.getUserValidator = [
   check("id").isMongoId().withMessage("This id is not valid"),
-  validatorMiddleware(),
+  validatorMiddleware,
 ];
 exports.deleteUserValidator = [
   check("id").isMongoId().withMessage("This id is not valid"),
-  validatorMiddleware(),
+  validatorMiddleware,
 ];

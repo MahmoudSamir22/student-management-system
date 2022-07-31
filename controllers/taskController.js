@@ -1,5 +1,3 @@
-const asyncHandler = require("express-async-handler");
-
 const { uploadSinglePDF } = require("../middlewares/uploadFilesMiddleWare");
 const factory = require("./factoryHandler");
 const ApiError = require("../utils/apiErrors");
