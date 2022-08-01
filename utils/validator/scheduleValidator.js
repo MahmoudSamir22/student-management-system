@@ -104,7 +104,7 @@ exports.updateScheduleValidator = [
     .isNumeric()
     .isLength({ min: 0, max: 24 })
     .withMessage("Course end must be between 0 and 24 hours")
-    .custom((val, { req }) => {
+    .custom(async (val, { req }) => {
         const schedule = await Schedule.findById(req.params.id)
       if (val < schedule.start) {
         throw new Error("Course can't end before it starts");

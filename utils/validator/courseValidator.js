@@ -4,7 +4,7 @@ const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const Course = require("../../models/courseModel");
 
 exports.addCourseValidator = [
-  body("name").notEmpty().withMessage("Course name is required").custom(val => {
+  body("name").notEmpty().withMessage("Course name is required").custom(async val => {
     const course = await Course.findOne({ name: val})
     if (course){
       throw new Error(`Course already exists`)
@@ -22,7 +22,7 @@ exports.addCourseValidator = [
 exports.updateCourseValidator = [
   check("id").isMongoId().withMessage("This id is not valid"),
   body("duration").optional().isNumeric().withMessage("duration is number"),
-  body("name").optional().custom(val => {
+  body("name").optional().custom(async (val) => {
     const course = await Course.findOne({ name: val})
     if (course){
       throw new Error(`Course already exists`)
