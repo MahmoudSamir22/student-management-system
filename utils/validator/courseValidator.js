@@ -4,7 +4,7 @@ const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const Course = require("../../models/courseModel");
 
 exports.addCourseValidator = [
-  body("name").notEmpty().withMessage("Course name is required").custom(async val => {
+  body("name").notEmpty().withMessage("Course name is required").custom(async (val) => {
     const course = await Course.findOne({ name: val})
     if (course){
       throw new Error(`Course already exists`)
