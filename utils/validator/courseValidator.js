@@ -3,7 +3,7 @@ const { body, check } = require("express-validator");
 const validatorMiddleware = require("../../middlewares/validatorMiddleware");
 const Course = require("../../models/courseModel");
 
-exports.addCourse = [
+exports.addCourseValidator = [
   body("name").notEmpty().withMessage("Course name is required").custom(val => {
     const course = await Course.findOne({ name: val})
     if (course){
