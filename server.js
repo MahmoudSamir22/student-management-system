@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config({path: 'config.env'})
-
+const path = require('path')
 
 const dbConnection = require('./database/dbConnection')
 const mountRoutes = require('./routes')
@@ -20,7 +20,7 @@ app.options('*', cors())
 
 app.use(express.json({limit: '20kb'}))
 
-app.use(express.static('uploads'))
+app.use(express.static(path.join(__dirname, 'uploads')))
 
 mountRoutes(app)
 app.all("*", (req, res, next) => {
