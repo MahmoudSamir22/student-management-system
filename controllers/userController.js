@@ -1,11 +1,13 @@
 const fs = require("fs");
 
+const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 
 const { uploadSingleImage } = require("../middlewares/uploadFilesMiddleWare");
-const factory = require('./factoryHandler')
+const generateToken = require("../utils/generateToken");
+const factory = require("./factoryHandler");
 const ApiError = require("../utils/apiErrors");
 const User = require("../models/userModel");
 
@@ -16,11 +18,11 @@ exports.uploadUserAvatar = uploadSingleImage("avatar");
 
 exports.resizeUserAvatar = asyncHandler(async (req, res, next) => {
   if (req.file) {
-    if (!fs.existsSync('./uploads/users')) {
+    if (!fs.existsSync("./uploads/users")) {
       if (!fs.existsSync("./uploads")) {
         fs.mkdirSync("./uploads");
       }
-      fs.mkdirSync('./uploads/users');
+      fs.mkdirSync("./uploads/users");
     }
     const fileName = `avatar-${uuidv4()}-${Date.now()}.jpeg`;
     sharp(req.file.buffer)
@@ -29,9 +31,9 @@ exports.resizeUserAvatar = asyncHandler(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`uploads/users/${fileName}`);
 
-    req.body.avatar = fileName
+    req.body.avatar = fileName;
   }
-  next()
+  next();
 });
 
 //@desc Create new user
@@ -68,4 +70,21 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   }
   await user.save();
   res.status(200).json({ data: user });
+});
+
+exports.changeMyPassword = asyncHandler(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+  const isEqual = await bcrypt.compare(oldPassword, req.user.password);
+  if (!isEqual) {
+    return next(
+      new ApiError("Password mismatch please enter the correct password", 400)
+    );
+  }
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { password: await bcrypt.hash(newPassword) },
+    { new: true }
+  );
+  const token = generateToken(req.user._id);
+  res.status(200).json({ status: "success", data: user, token });
 });

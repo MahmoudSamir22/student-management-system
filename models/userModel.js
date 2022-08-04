@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     studentLevel: Number,
     section: Number,
+    passwordResetCode: String,
+    passwordResetExpirs: Date,
+    passwordResetVerified: Boolean,
   },
   { timestamps: true }
 );
