@@ -16,6 +16,7 @@ const {
 //   deleteUserValidator,
 // } = require("../utils/validator/userValidator");
 
+
 router
   .route("/")
   .post(uploadUserAvatar, resizeUserAvatar, createUser)

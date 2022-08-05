@@ -88,3 +88,5 @@ exports.changeMyPassword = asyncHandler(async (req, res, next) => {
   const token = generateToken(req.user._id);
   res.status(200).json({ status: "success", data: user, token });
 });
+
+

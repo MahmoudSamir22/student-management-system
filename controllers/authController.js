@@ -1,7 +1,10 @@
+const crypto = require("crypto");
+
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const sendEmail = require('../utils/sendEmails')
 const ApiError = require("../utils/apiErrors");
 const generateToken = require("../utils/generateToken");
 const User = require("../models/userModel");
@@ -72,4 +75,44 @@ exports.getLoggedUserData = asyncHandler(async (req, res, next) => {
     return next(new ApiError("User not found", 404));
   }
   res.status(200).json({ status: "Success", data: user });
+});
+
+exports.forgetPassword = asyncHandler(async (req, res, next) => {
+  // 1) Find user by email 
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return next(new ApiError("This email is not registerd", 404));
+  // 2) Generate 6 numbers reset code
+  const resetCode = Math.floor(1000 + Math.random() * 900000).toString();
+  // 3) Hash Reset Code
+  const hashedResetCode = crypto
+    .createHash("sha256")
+    .update(resetCode)
+    .digest("hex");
+  // 4) Save them to DB
+    user.passwordResetCode = hashedResetCode;
+    user.passwordResetExpirs = Date.now() + 10 * 60 * 1000;
+    user.passwordResetVerified = false;
+    await user.save()
+  
+    const message = `Hi ${user.name}, \nWe have recived a request to change the password on your Student account. \n ${resetCode}`;
+
+    // 5) send the reset code via email
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: "Password Reset Code (Valid for 10 mins)",
+        message,
+      });
+    } catch (error) {
+      user.passwordResetCode = undefined;
+      user.passwordResetExpirs = undefined;
+      user.passwordResetVerified = undefined;
+  
+      await user.save();
+      return next(new ApiError("There was an Error sending this email", 500));
+    }
+  
+    res
+      .status(200)
+      .json({ status: "success", message: "Rest code sent to email" });
 });
